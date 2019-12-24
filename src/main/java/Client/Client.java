@@ -1,11 +1,17 @@
 package Client;
 
+import Xml.ReadXml;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
+
+import static Xml.ReadXml.GetParam;
 
 public class Client extends Thread{
     private String l_sNameUser;
@@ -15,9 +21,11 @@ public class Client extends Thread{
     private BufferedReader l_rBr;
     private PrintWriter l_rPw;
 
-    public Client(String p_sNameUser){
+    public Client(String p_sNameUser) throws ParserConfigurationException, SAXException, IOException {
+        ReadXml rXml = new ReadXml("config.xml");
+
         l_sNameUser = p_sNameUser;
-        l_iPortServer = 1778;
+        l_iPortServer = Integer.valueOf(GetParam("port"));
 
         try {
             l_rSocket = new Socket("127.0.0.1", l_iPortServer);
@@ -67,13 +75,12 @@ public class Client extends Thread{
         l_rSocket.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException  {
 
         String str;
 
         System.out.println("Старт клиента");
 
-        String sMessage;
         Scanner rScan = new Scanner(System.in);
         System.out.println("Введите ник:");
         str = rScan.nextLine();
@@ -83,7 +90,9 @@ public class Client extends Thread{
         rCl.start();
 
         while (true){
-            sMessage = "message #" + rCl.GetName() + "&";
+            StringBuilder sMessage = new StringBuilder();
+
+            sMessage.append("message #").append(rCl.GetName()).append("&");
 
             System.out.println("Ник получателя:");
 
@@ -92,12 +101,12 @@ public class Client extends Thread{
                 break;
             }
 
-            sMessage = sMessage + str + "#";
+            sMessage.append(str).append("#");
 
             System.out.println("Ввод сообщения:");
-            sMessage = sMessage + rScan.nextLine();
+            sMessage.append(rScan.nextLine());
 
-            rCl.SendMess(sMessage);
+            rCl.SendMess(sMessage.toString());
         }
 
         rCl.Close();

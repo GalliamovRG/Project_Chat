@@ -2,18 +2,16 @@ package Server;
 
 import java.sql.*;
 
+import static Xml.ReadXml.GetParam;
+
 public class RunDB {
     public Statement l_rStatDB;
     private Connection l_rCon;
 
     public RunDB(){
-        String sDbUrl = "jdbc:postgresql://localhost:5432/Chat";
-        String sUserName = "postgres";
-        String sPass = "12345";
-
         try{
-            Class.forName("org.postgresql.Driver");
-            l_rCon = DriverManager.getConnection(sDbUrl, sUserName, sPass);
+            Class.forName(GetParam("driver"));
+            l_rCon = DriverManager.getConnection(GetParam("db_url"), GetParam("user_name"), GetParam("pass"));
             System.out.println("Есть конект к БД!");
 
             l_rStatDB = l_rCon.createStatement();

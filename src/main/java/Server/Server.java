@@ -1,20 +1,28 @@
 package Server;
 
+import Xml.ReadXml;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.*;
 import java.util.HashMap;
 
+import static Xml.ReadXml.GetParam;
+
 public class Server {
-    public int iServerPort;
+    public Integer iServerPort;
     public ServerSocket rServSocket;
     public HashMap<String, Readers> arrReaders;
 
     public RunDB l_rDb;
 
-    public Server(){
-        iServerPort = 1778;
+    public Server() throws ParserConfigurationException, SAXException, IOException {
+        ReadXml rXml = new ReadXml("config.xml");
+
+        iServerPort = Integer.valueOf(GetParam("port"));
 
         try {
             rServSocket = new ServerSocket(iServerPort);
@@ -68,7 +76,7 @@ public class Server {
 
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ParserConfigurationException, SAXException, IOException {
         Server rServ = new Server();
 
         try {
