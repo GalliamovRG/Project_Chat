@@ -8,6 +8,18 @@ public class RunDB {
     public Statement l_rStatDB;
     private Connection l_rCon;
 
+    /**
+     * Структура БД
+     *create table messages
+     * (
+     *     from_user varchar(50)   not null,
+     *     to_user   varchar(50)   not null,
+     *     message   varchar(4000) not null,
+     *     read      varchar(1)    not null,
+     *     time      timestamp     not null
+     * );
+     */
+
     public RunDB(){
         try{
             Class.forName(GetParam("driver"));
